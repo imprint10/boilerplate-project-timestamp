@@ -24,6 +24,30 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+// My api endpoint
+app.get('/api/:date?', function(req, res) {
+  let date_string = req.params.date;
+  let date;
+
+  // Check if date_string is undefined, which means no date parameter was provided
+  if (date_string === undefined) {
+    date = new Date();
+  } else {
+    // Check if date_string is a unix timestamp (i.e., can be parsed as an integer)
+    if (!isNaN(date_string)) {
+      date = new Date(parseInt(date_string));
+    } else {
+      date = new Date(date_string);
+    }
+  }
+
+  // Check if date is invalid
+  if (date.toString() === "Invalid Date") {
+    res.json({ error: "Invalid Date" });
+  } else {
+    res.json({ unix: date.getTime(), utc: date.toUTCString() });
+  }
+});
 
 
 // listen for requests :)
